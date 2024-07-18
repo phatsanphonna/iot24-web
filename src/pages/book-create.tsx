@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout";
-import { Button, Checkbox, Container, Divider, NumberInput, TextInput } from "@mantine/core";
+import { Button, Checkbox, Container, Divider, NumberInput, Textarea, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -18,19 +18,28 @@ export default function BookCreatePage() {
       author: "",
       year: 2024,
       is_published: false,
+      description: "",
+      short_description: "",
+      category: '',
     },
 
     validate: {
       title: isNotEmpty("กรุณาระบุชื่อหนังสือ"),
       author: isNotEmpty("กรุณาระบุชื่อผู้แต่ง"),
       year: isNotEmpty("กรุณาระบุปีที่พิมพ์หนังสือ"),
+      description: isNotEmpty("กรุณาระบุรายละเอียดหนังสือ"),
+      short_description: isNotEmpty("กรุณาระบุเรื่องย่อหนังสือ"),
+      category: isNotEmpty("กรุณาระบุหมวดหมู่หนังสือ"),
     },
   });
 
   const handleSubmit = async (values: typeof bookCreateForm.values) => {
     try {
       setIsProcessing(true);
-      const response = await axios.post<Book>(`/books`, values);
+      const response = await axios.post<Book>(`/books`, {
+        ...values,
+        category: values.category.split(',').map((category) => category.trim()),
+      });
       notifications.show({
         title: "เพิ่มข้อมูลหนังสือสำเร็จ",
         message: "ข้อมูลหนังสือได้รับการเพิ่มเรียบร้อยแล้ว",
@@ -92,8 +101,23 @@ export default function BookCreatePage() {
             />
 
             {/* TODO: เพิ่มรายละเอียดหนังสือ */}
-            {/* TODO: เพิ่มเรื่องย่อ */}
-            {/* TODO: เพิ่มหมวดหมู่(s) */}
+            <Textarea
+              label="รายละเอียดหนังสือ"
+              placeholder="รายละเอียดหนังสือ"
+              {...bookCreateForm.getInputProps("description")}
+            />
+
+            <Textarea
+              label="เรื่องย่อ"
+              placeholder="เรื่องย่อ"
+              {...bookCreateForm.getInputProps("short_description")}
+            />
+
+            <TextInput
+              label="หมวดหมู่ (คั่นด้วยเครื่องหมาย ',' เช่น นิยาย,สารคดี)"
+              placeholder="หมวดหมู่"
+              {...bookCreateForm.getInputProps("category")}
+            />
 
             <Checkbox
               label="เผยแพร่"

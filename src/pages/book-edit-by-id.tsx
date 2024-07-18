@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { Book } from "../lib/models";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/layout";
-import { Alert, Button, Checkbox, Container, Divider, NumberInput, TextInput } from "@mantine/core";
+import { Alert, Button, Checkbox, Container, Divider, NumberInput, Textarea, TextInput } from "@mantine/core";
 import Loading from "../components/loading";
 import { IconAlertTriangleFilled, IconTrash } from "@tabler/icons-react";
 import { isNotEmpty, useForm } from "@mantine/form";
@@ -26,19 +26,28 @@ export default function BookEditById() {
       author: "",
       year: 2024,
       is_published: false,
+      description: "",
+      short_description: "",
+      category: '',
     },
 
     validate: {
       title: isNotEmpty("กรุณาระบุชื่อหนังสือ"),
       author: isNotEmpty("กรุณาระบุชื่อผู้แต่ง"),
       year: isNotEmpty("กรุณาระบุปีที่พิมพ์หนังสือ"),
+      description: isNotEmpty("กรุณาระบุรายละเอียดหนังสือ"),
+      short_description: isNotEmpty("กรุณาระบุเรื่องย่อหนังสือ"),
+      category: isNotEmpty("กรุณาระบุหมวดหมู่หนังสือ"),
     },
   });
 
   const handleSubmit = async (values: typeof bookEditForm.values) => {
     try {
       setIsProcessing(true);
-      await axios.patch(`/books/${bookId}`, values);
+      await axios.patch(`/books/${bookId}`, {
+        ...values,
+        category: values.category.split(',').map((category) => category.trim()),
+      });
       notifications.show({
         title: "แก้ไขข้อมูลหนังสือสำเร็จ",
         message: "ข้อมูลหนังสือได้รับการแก้ไขเรียบร้อยแล้ว",
@@ -117,8 +126,12 @@ export default function BookEditById() {
 
   useEffect(() => {
     if (!isSetInitialValues && book) {
-      bookEditForm.setInitialValues(book);
-      bookEditForm.setValues(book);
+      const parsedBook = {
+        ...book,
+        category: (book.category as string[]).join(","),
+      };
+      bookEditForm.setInitialValues(parsedBook);
+      bookEditForm.setValues(parsedBook);
       setIsSetInitialValues(true);
     }
   }, [book, bookEditForm, isSetInitialValues]);
@@ -163,9 +176,23 @@ export default function BookEditById() {
                   {...bookEditForm.getInputProps("year")}
                 />
 
-                {/* TODO: เพิ่มรายละเอียดหนังสือ */}
-                {/* TODO: เพิ่มเรื่องย่อ */}
-                {/* TODO: เพิ่มหมวดหมู่(s) */}
+                <Textarea
+                  label="รายละเอียดหนังสือ"
+                  placeholder="รายละเอียดหนังสือ"
+                  {...bookEditForm.getInputProps("description")}
+                />
+
+                <Textarea
+                  label="เรื่องย่อ"
+                  placeholder="เรื่องย่อ"
+                  {...bookEditForm.getInputProps("short_description")}
+                />
+
+                <TextInput
+                  label="หมวดหมู่ (คั่นด้วยเครื่องหมาย ',' เช่น นิยาย,สารคดี)"
+                  placeholder="หมวดหมู่"
+                  {...bookEditForm.getInputProps("category")}
+                />
 
                 <Checkbox
                   label="เผยแพร่"
