@@ -8,7 +8,9 @@ import { IconAlertTriangleFilled } from '@tabler/icons-react';
 
 const MenuPage: React.FC = () => {
   const menus: Menu[] = []
-  const error = {}
+  const error = {
+    message: 'เกิดข้อผิดพลาดในการอ่านข้อมูล'
+  }
 
   return (
     <Layout>
@@ -27,7 +29,7 @@ const MenuPage: React.FC = () => {
           <h1>รายการเครื่องดื่ม</h1>
         </div>
 
-        {/* {!menus && !error && <Loading />}
+        {!menus && !error && <Loading />}
         {error && (
           <Alert
             color="red"
@@ -36,7 +38,7 @@ const MenuPage: React.FC = () => {
           >
             {error.message}
           </Alert>
-        )} */}
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {menus?.map((menu) => (
