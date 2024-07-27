@@ -14,3 +14,11 @@ export interface Menu {
   name: string;
   price: number;
 }
+
+export interface Order {
+  id: number;
+  menu?: Menu;
+  menu_id: number;
+  quantity: number;
+  is_paid: boolean;
+}
