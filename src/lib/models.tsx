@@ -20,5 +20,5 @@ export interface Order {
   menu?: Menu;
   menu_id: number;
   quantity: number;
-  is_paid: boolean;
+  remark: string;
 }

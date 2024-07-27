@@ -29,6 +29,7 @@ const AdminOrderListPage: React.FC = () => {
                 <TableTh>Order ID</TableTh>
                 <TableTh>Menu</TableTh>
                 <TableTh>Quantity</TableTh>
+                <TableTh>Remark</TableTh>
               </TableTr>
             </TableThead>
             <TableTbody>
@@ -37,6 +38,7 @@ const AdminOrderListPage: React.FC = () => {
                   <TableTd>{order.id}</TableTd>
                   <TableTd>{order.menu?.name}</TableTd>
                   <TableTd>{order.quantity}</TableTd>
+                  <TableTd>{order.remark}</TableTd>
                 </TableTr>
               ))}
             </TableTbody>
