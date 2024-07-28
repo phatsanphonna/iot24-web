@@ -11,8 +11,12 @@ interface Props {
 const MenuCard: React.FC<Props> = ({ menu }) => {
   const [quantity, setQuantity] = useState(1);
   const [remark, setRemark] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const orderMenu = async () => {
+    if (isProcessing) return;
+
+    setIsProcessing(true);
     const { status } = await axios.post(`/orders`, [
       {
         menu_id: menu.id,
@@ -34,6 +38,10 @@ const MenuCard: React.FC<Props> = ({ menu }) => {
         color: "red",
       });
     }
+
+    setIsProcessing(false);
+    setQuantity(1);
+    setRemark('');
   }
 
   return (
@@ -45,6 +53,7 @@ const MenuCard: React.FC<Props> = ({ menu }) => {
 
       <div className="p-4">
         <TextInput
+          disabled={isProcessing}
           value={remark}
           onChange={(event) => setRemark(event.currentTarget.value)}
           placeholder="หมายเหตุ"
@@ -53,6 +62,7 @@ const MenuCard: React.FC<Props> = ({ menu }) => {
 
       <div className="flex justify-between px-4 pb-2">
         <TextInput
+          disabled={isProcessing}
           type="number"
           min={1}
           value={quantity}
@@ -60,7 +70,7 @@ const MenuCard: React.FC<Props> = ({ menu }) => {
           placeholder="จำนวน"
           className="w-1/3"
         />
-        <Button size="xs" variant="default" onClick={orderMenu}>
+        <Button size="xs" variant="default" onClick={orderMenu} disabled={isProcessing}>
           สั่ง
         </Button>
       </div>
