@@ -1,12 +1,10 @@
-import { Alert, Button } from '@mantine/core'
+import { Alert } from '@mantine/core'
 import Layout from '../components/layout'
 import cafeBackgroundImage from "../assets/images/coffee-1.jpg";
 import Loading from '../components/loading';
 import { Menu } from '../lib/models';
 import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import useSWR from 'swr';
-import axios from 'axios';
-import { notifications } from '@mantine/notifications';
 import MenuCard from '../components/MenuCard';
 
 
