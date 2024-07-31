@@ -1,14 +1,18 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Menu } from '../lib/models'
 import { notifications } from '@mantine/notifications';
 import { Button, TextInput } from '@mantine/core';
 import { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { IconTrash } from '@tabler/icons-react';
 
 interface Props {
   menu: Menu;
 }
 
 const MenuCard: React.FC<Props> = ({ menu }) => {
+  const navigate = useNavigate();
+
   const [quantity, setQuantity] = useState(1);
   const [remark, setRemark] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -44,10 +48,57 @@ const MenuCard: React.FC<Props> = ({ menu }) => {
     setRemark('');
   }
 
+  const handleDelete = async () => {
+    try {
+      setIsProcessing(true);
+      await axios.delete(`/menus/${menu.id}`);
+      notifications.show({
+        title: "ลบเมนูสำเร็จ",
+        message: "ลบเมนูเล่มนี้ออกจากระบบเรียบร้อยแล้ว",
+        color: "red",
+      });
+      navigate("/menu");
+      window.location.reload();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 404) {
+          notifications.show({
+            title: "ไม่พบข้อมูลเมนู",
+            message: "ไม่พบข้อมูลเมนูที่ต้องการลบ",
+            color: "red",
+          });
+        } else if (error.response?.status || 500 >= 500) {
+          notifications.show({
+            title: "เกิดข้อผิดพลาดบางอย่าง",
+            message: "กรุณาลองใหม่อีกครั้ง",
+            color: "red",
+          });
+        }
+      } else {
+        notifications.show({
+          title: "เกิดข้อผิดพลาดบางอย่าง",
+          message: "กรุณาลองใหม่อีกครั้ง หรือดูที่ Console สำหรับข้อมูลเพิ่มเติม",
+          color: "red",
+        });
+      }
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <div className="border border-solid border-neutral-200" key={menu.id}>
       <div className="p-4">
-        <h2 className="text-lg font-semibold line-clamp-2">{menu.name}</h2>
+        <div className='flex justify-between items-center'>
+          <h2 className="text-lg font-semibold line-clamp-2">{menu.name}</h2>
+
+          <IconTrash
+            onClick={handleDelete}
+            className="cursor-pointer"
+            size={16}
+            color="red"
+          />
+        </div>
         <p className="text-sm text-neutral-500">{menu.price} บาท</p>
       </div>
 

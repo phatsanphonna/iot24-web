@@ -1,11 +1,12 @@
-import { Alert } from '@mantine/core'
+import { Alert, Button } from '@mantine/core'
 import Layout from '../components/layout'
 import cafeBackgroundImage from "../assets/images/coffee-1.jpg";
 import Loading from '../components/loading';
 import { Menu } from '../lib/models';
-import { IconAlertTriangleFilled } from '@tabler/icons-react';
+import { IconAlertTriangleFilled, IconPlus } from '@tabler/icons-react';
 import useSWR from 'swr';
 import MenuCard from '../components/MenuCard';
+import { Link } from 'react-router-dom';
 
 
 const MenuPage: React.FC = () => {
@@ -26,6 +27,17 @@ const MenuPage: React.FC = () => {
       <section className="container mx-auto py-8">
         <div className="flex justify-between">
           <h1>รายการเครื่องดื่ม</h1>
+
+          <Button
+            component={Link}
+            leftSection={<IconPlus />}
+            to="/menu/create"
+            size="xs"
+            variant="primary"
+            className="flex items-center space-x-2"
+          >
+            เพิ่มเมนู
+          </Button>
         </div>
 
         {!menus && !error && <Loading />}
