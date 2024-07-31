@@ -3,7 +3,7 @@ import { Menu } from '../lib/models'
 import { notifications } from '@mantine/notifications';
 import { Button, TextInput } from '@mantine/core';
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IconTrash } from '@tabler/icons-react';
 
 interface Props {

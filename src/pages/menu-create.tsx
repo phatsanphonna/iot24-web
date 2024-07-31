@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout";
-import { Book, Menu } from "../lib/models";
+import { Menu } from "../lib/models";
 
 export default function MenuCreatePage() {
   const navigate = useNavigate();
